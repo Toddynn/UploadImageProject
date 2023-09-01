@@ -90,12 +90,11 @@ export default function Home() {
 				});
 			})
 			.catch((err) => {
-				const { data } = err.response;
 				return updateFile(file.id, {
 					...file,
 					error: {
 						failed: true,
-						message: data.message,
+						message: err.response.data.message,
 					},
 				});
 			});
@@ -154,27 +153,27 @@ export default function Home() {
 				>
 					<Button.Icon icon={Upload} color="white " />
 				</Button.Root>
+				<AnimatePresence mode="wait" initial={false} onExitComplete={() => null}>
+					{showModal && (
+						<Modal.Root
+							variants={ShortSlideFromBottomVariant}
+							initial="hidden"
+							animate="visible"
+							exit="exit"
+							className="xsm:right-5 bottom-24 h-auto min-w-[30%] gap-2 rounded-lg bg-slate-700 p-2"
+						>
+							<Modal.Content className=" h-full w-full  ">
+								<Modal.Actions className="justify-end text-white">
+									<Button.Root onClick={toggleModal} className="group rounded-full p-1 hover:bg-slate-600">
+										<Button.Icon icon={ChevronDown} />
+									</Button.Root>
+								</Modal.Actions>
+								<DragAndDrop maxSize={4 * 1024 * 1024} mainType="Imagens" onDropFiles={onDropFiles} maxFiles={10} />
+							</Modal.Content>
+						</Modal.Root>
+					)}
+				</AnimatePresence>
 			</Card.Root>
-			<AnimatePresence mode="wait" initial={false} onExitComplete={() => null}>
-				{showModal && (
-					<Modal.Root
-						variants={ShortSlideFromBottomVariant}
-						initial="hidden"
-						animate="visible"
-						exit="exit"
-						className="bottom-40 right-5 h-auto min-w-[30%] gap-2 rounded-lg bg-slate-700 p-2"
-					>
-						<Modal.Content className=" h-full w-full  ">
-							<Modal.Actions className="justify-end text-white">
-								<Button.Root onClick={toggleModal} className="group rounded-full p-1 hover:bg-slate-600">
-									<Button.Icon icon={ChevronDown} />
-								</Button.Root>
-							</Modal.Actions>
-							<DragAndDrop maxSize={4 * 1024 * 1024} mainType="Imagens" onDropFiles={onDropFiles} maxFiles={10} />
-						</Modal.Content>
-					</Modal.Root>
-				)}
-			</AnimatePresence>
 		</main>
 	);
 }
